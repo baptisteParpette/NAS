@@ -18,6 +18,7 @@ This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAl
 * **Valentin LEMAIRE** - *Initial work* - [Valentin Lemaire](https://github.com/28Pollux28)
 * **Gaspard O'MAHONY** - *Initial work* - [gaspardomahony](https://github.com/gaspardomahony)
 * **Baptiste Parpette** - *Initial work* - [Baptiste Parpette](
+* **Valentin RENAUD** - *Initial work* - [Valentin Renaud](https://github.com/Valdyzer)
 ---
 
 ## License
