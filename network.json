@@ -1,0 +1,141 @@
+{
+  "AS": [
+    {
+      "number": "500",
+      "IpRange": {
+        "start": "192.168.64.0",
+        "end": "192.168.255.255",
+        "mask": "30"
+      },
+      "IpLoopbackRange": {
+        "start": "192.168.0.0",
+        "end": "192.168.63.255",
+        "mask": "32"
+      },
+      "igp": {
+        "type": "ospf"
+      },
+      "bgp": {
+        "enabled": true,
+        "routerID": "loopback"
+      },
+      "mpls": {
+        "enabled": true,
+        "type": "ldp"
+      },
+      "baseHostname": "R100",
+      "routers": [
+        {
+          "id": "1",
+          "hostname": "PE1",
+          "connections": [
+            {
+              "router": "2",
+              "interface": "2",
+              "ospfArea": "0",
+              "ospfCost": "1"
+            }
+          ],
+          "bgp": {
+            "out": {
+              "networks": "",
+              "filter": {
+              }
+            },
+            "in": {
+              "filter": {
+              }
+            }
+          }
+        },
+        {
+          "id": "2",
+          "hostname": "P1",
+          "connections": [
+            {
+              "router": "1",
+              "interface": "2",
+              "ospfArea": "0",
+              "ospfCost": "1"
+            },
+            {
+              "router": "3",
+              "interface": "1",
+              "ospfArea": "0",
+              "ospfCost": "1"
+            }
+          ],
+          "bgp": {
+            "out": {
+              "networks": "",
+              "filter": {
+              }
+            },
+            "in": {
+              "filter": {
+              }
+            }
+          }
+        },
+        {
+          "id": "3",
+          "hostname": "P2",
+          "connections": [
+            {
+              "router": "2",
+              "interface": "1",
+              "ospfArea": "0",
+              "ospfCost": "1"
+            },
+            {
+              "router": "4",
+              "interface": "2",
+              "ospfArea": "0",
+              "ospfCost": "1"
+            }
+          ],
+          "bgp": {
+            "out": {
+              "networks": "",
+              "filter": {
+              }
+            },
+            "in": {
+              "filter": {
+              }
+            }
+          }
+        },
+        {
+          "id": "4",
+          "hostname": "PE2",
+          "connections": [
+            {
+              "router": "3",
+              "interface": "2",
+              "ospfArea": "0",
+              "ospfCost": "1"
+            },
+            {
+              "router": "4",
+              "interface": "2",
+              "ospfArea": "0",
+              "ospfCost": "1"
+            }
+          ],
+          "bgp": {
+            "out": {
+              "networks": "",
+              "filter": {
+              }
+            },
+            "in": {
+              "filter": {
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
