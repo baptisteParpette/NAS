@@ -34,8 +34,9 @@ class AS:
         self.indexLoopback = loopbackStart
         self.indexLink = ipStart
         self.mpls = mpls
-        self.routers = []
+        self.routers = {}
         self.igp = igp
+        self.provEdgeRouters = []
 
 class Igp:
     def __init__(self):
@@ -44,4 +45,20 @@ class Igp:
         self.type = None
         self.passive_interfaces = []
 
+class LinksManager:
+    def __init__(self, ipStart, ipEnd, mask):
+        self.indexLink = ipStart
+        self.indexLinkEnd = ipEnd
+        self.linkMask = mask
+
+class Bgp:
+    def __init__(self, asn, router_id):
+        self.id = asn
+        self.neighbors = []
+        self.router_id = router_id
+
+class Neighbor:
+    def __init__(self, remote_as, ip):
+        self.remote_as = remote_as
+        self.ip = ip
 
