@@ -1,10 +1,10 @@
 {
   "AS": [
     {
-      "number": "500",
+      "number": "100",
       "IpRange": {
         "start": "192.168.64.0",
-        "end": "192.168.255.255",
+        "end": "192.168.223.255",
         "mask": "30"
       },
       "IpLoopbackRange": {
@@ -28,6 +28,9 @@
         {
           "id": "1",
           "hostname": "PE1",
+          "loopback": {
+            "ospfArea": "0"
+          },
           "connections": [
             {
               "router": "2",
@@ -51,6 +54,9 @@
         {
           "id": "2",
           "hostname": "P1",
+          "loopback": {
+            "ospfArea": "0"
+          },
           "connections": [
             {
               "router": "1",
@@ -80,6 +86,9 @@
         {
           "id": "3",
           "hostname": "P2",
+          "loopback": {
+            "ospfArea": "0"
+          },
           "connections": [
             {
               "router": "2",
@@ -109,15 +118,12 @@
         {
           "id": "4",
           "hostname": "PE2",
+          "loopback": {
+            "ospfArea": "0"
+          },
           "connections": [
             {
               "router": "3",
-              "interface": "2",
-              "ospfArea": "0",
-              "ospfCost": "1"
-            },
-            {
-              "router": "4",
               "interface": "2",
               "ospfArea": "0",
               "ospfCost": "1"
@@ -136,6 +142,188 @@
           }
         }
       ]
+    },
+    {
+      "number": "2",
+      "IpRange": {
+        "start": "192.168.64.0",
+        "end": "192.168.223.255",
+        "mask": "30"
+      },
+      "IpLoopbackRange": {
+        "start": "192.168.0.0",
+        "end": "192.168.63.255",
+        "mask": "32"
+      },
+      "igp": {
+        "type": "ospf"
+      },
+      "bgp": {
+        "enabled": true,
+        "routerID": "loopback"
+      },
+      "mpls": {
+        "enabled": false,
+        "type": "ldp"
+      },
+      "routers": [
+        {
+          "id": "1",
+          "hostname": "CE2",
+          "loopback": {
+            "ospfArea": "0"
+          },
+          "connections": [
+          ],
+          "bgp": {
+            "out": {
+              "networks": "",
+              "filter": {
+              }
+            },
+            "in": {
+              "filter": {
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "number": "3",
+      "IpRange": {
+        "start": "192.168.64.0",
+        "end": "192.168.223.255",
+        "mask": "30"
+      },
+      "IpLoopbackRange": {
+        "start": "192.168.0.0",
+        "end": "192.168.63.255",
+        "mask": "32"
+      },
+      "igp": {
+        "type": "ospf"
+      },
+      "bgp": {
+        "enabled": true,
+        "routerID": "loopback"
+      },
+      "mpls": {
+        "enabled": false,
+        "type": "ldp"
+      },
+      "routers": [
+        {
+          "id": "1",
+          "hostname": "CE3",
+          "loopback": {
+            "ospfArea": "0"
+          },
+          "connections": [
+          ],
+          "bgp": {
+            "out": {
+              "networks": "",
+              "filter": {
+              }
+            },
+            "in": {
+              "filter": {
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "number": "4",
+      "IpRange": {
+        "start": "192.168.64.0",
+        "end": "192.168.223.255",
+        "mask": "30"
+      },
+      "IpLoopbackRange": {
+        "start": "192.168.0.0",
+        "end": "192.168.63.255",
+        "mask": "32"
+      },
+      "igp": {
+        "type": "ospf"
+      },
+      "bgp": {
+        "enabled": true,
+        "routerID": "loopback"
+      },
+      "mpls": {
+        "enabled": false,
+        "type": "ldp"
+      },
+      "routers": [
+        {
+          "id": "1",
+          "hostname": "CE4",
+          "loopback": {
+            "ospfArea": "0"
+          },
+          "connections": [
+          ],
+          "bgp": {
+            "out": {
+              "networks": "",
+              "filter": {
+              }
+            },
+            "in": {
+              "filter": {
+              }
+            }
+          }
+        }
+      ]
     }
-  ]
+  ],
+  "ASLink": {
+    "IpRange": {
+      "start": "192.168.124.0",
+      "end": "192.168.255.255",
+      "mask": "30"
+    },
+    "links": [
+      {
+        "firstAS": "100",
+        "firstRouter": "6",
+        "firstInterface": {
+          "id": "3"
+        },
+        "secondAS": "200",
+        "secondRouter": "6",
+        "secondInterface": {
+          "id": "3",
+          "ospfArea": "0",
+          "ospfCost": "1"
+        },
+        "relationship": "peer",
+        "filter1": {
+          "in": {
+            "prefixes": [
+            ]
+          },
+          "out": {
+            "prefixes": [
+            ]
+          }
+        },
+        "filter2": {
+          "in": {
+            "prefixes": [
+            ]
+          },
+          "out": {
+            "prefixes": [
+            ]
+          }
+        }
+      }
+    ]
+  }
 }
