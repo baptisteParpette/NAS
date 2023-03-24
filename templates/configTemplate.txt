@@ -50,9 +50,6 @@ interface {{router.loopback.name}}
  ip address {{router.loopback.ip}} {{router.loopback.mask}}
  {% if router.loopback.ospf %}
  ip ospf {{router.loopback.ospf.id}} area {{router.loopback.ospf.area}}
- {% if router.loopback.ospf.cost %}
-    ip ospf cost {{router.loopback.ospf.cost}}
- {% endif %}
  {% endif %}
 {% endif %}
 !
@@ -62,19 +59,20 @@ interface {{interface.name}}
  {% if interface.ospf %}
  ip ospf {{interface.ospf.id}} area {{interface.ospf.area}}
  {% if interface.ospf.cost %}
-    ip ospf cost {{interface.ospf.cost}}
+ ip ospf cost {{interface.ospf.cost}}
  {% endif %}
  {% endif %}
  {% if interface.mpls %}
  mpls ip
  {% endif %}
+ negotiation auto
 !
 {% endfor %}
 !
 {% if router.igp.type == 'ospf' %}
 router ospf {{router.igp.id}}
  router-id {{router.igp.router_id}}
- {% for interface in router.ospf.passiveInterfaces %}
+ {% for interface in router.igp.passiveInterfaces %}
  passive-interface {{interface}}
  {% endfor %}
 {% endif %}
