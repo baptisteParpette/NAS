@@ -23,6 +23,14 @@ class OspfInterface:
         self.area = None
         self.cost = None
 
+class AS:
+    def __init__(self,ipStart,ipEnd,loopbackStart,loopbackEnd,mask):
+        
+        self.mask=mask
+        self.indexLinkEnd = ipEnd
+        self.indexLoopbackEnd = loopbackEnd
+        self.indexLoopback = loopbackStart
+        self.indexLink = ipStart
 
 class Igp:
     def __init__(self):
