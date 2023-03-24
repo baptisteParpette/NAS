@@ -6,6 +6,23 @@ import models
 
 
 def incrementSubnetIP(ip, mask, ipMax):
+    """
+    Calculate and return the next IPv4 address within a subnet range.
+
+    This function computes the next IPv4 address from a given address and mask,
+    considering the maximum allowed IPv4 address in the subnet range.
+
+    Parameters:
+        ip (List[int]): The reference IPv4 address in the format [xxx, xxx, xxx, xxx]. Example: ip = [192, 168, 0, 0]\n
+        mask (int): The subnet mask.\n
+        ipMax (List[int]): The maximum IPv4 address in the range, in the format [xxx, xxx, xxx, xxx]. Example: ipMax = [192, 168, 255, 255]\n
+
+    Returns:
+        List[int]: The new IPv4 address within the subnet range.
+
+    Raises:
+        Exception: If the calculated IPv4 address overflows the valid address range or is greater than the maximum allowed IPv4 address.
+    """
     ip = ip.copy()
     add = 2 ** (32 - mask)
     ip[3] += add
@@ -25,6 +42,23 @@ def incrementSubnetIP(ip, mask, ipMax):
     return ip
     
 def incrementIP(ip, amount):
+    """
+    Calculate and return the incremented IPv4 address by a given amount.
+
+    This function computes the IPv4 address by incrementing the given IP address
+    with a specified amount.
+
+    Parameters:
+        ip (List[int]): The reference IPv4 address in the format [xxx, xxx, xxx, xxx]. Example: ip = [192, 168, 0, 0]\n
+        amount (int): The number of steps to increment the IP address. Example: amount = 2
+
+    Returns:
+        List[int]: The incremented IPv4 address in the format [xxx, xxx, xxx, xxx]. Example: ip = [192, 168, 0, 2]
+
+    Raises:
+        Exception: If the calculated IPv4 address overflows the valid address range.
+    """
+    ip = i
     ip = ip.copy()
     ip[3] += amount
     if ip[3] > 255:
@@ -44,6 +78,19 @@ def incrementIP(ip, amount):
     
 
 def handle_network(network):
+    '''
+    This function creates objects representing Autonomous Systems (AS) based on a provided network architecture.
+
+    Parameters:
+        network (dict): A JSON object representing the network architecture, which must contain a key 'AS' with a list of AS objects.
+
+    Returns:
+        dict: A dictionary containing all the created AS objects, indexed by their AS number.
+
+    Raises:
+        ValueError: If the 'AS' key is missing from the provided JSON object.
+    '''
+
     ASList = {}
     for As in network['AS']:
         IPstart = list(map(int,As["IpRange"]["start"].split(".")))
@@ -69,6 +116,16 @@ def handle_network(network):
     return ASList
 
 def handle_router(as_object,routeur):
+    """
+    This function creates objects representing routers based on a provided router list.
+
+    Parameters:
+        as_object (AS object): The AS object to which the router belongs.\n
+        routeur (dict): A dictionary representing the router to be created, with keys 'id', 'hostname', 'loopback', and 'connections'.\n
+
+    Returns:
+        Router object: An object representing the created router.
+    """
     router_object = models.Router()
     router_object.id = int(routeur['id'])
     router_object.hostname = routeur['hostname']
@@ -77,14 +134,21 @@ def handle_router(as_object,routeur):
         router_object.interfaces.append(handle_interface(connection, as_object, router_object))
 
     router_object.igp = handle_igp(as_object, router_object)
-
-
-
-
-
     return router_object
 
 def handle_loopback(as_object, router_object, loopback):
+    """
+    This function creates objects representing loopback interfaces based on a provided loopback list.
+
+    Parameters:
+        as_object (AS object): The AS object to which the loopback interface belongs.\n
+        router_object (Router object): The router object to which the loopback interface belongs.\n
+        loopback (dict): A dictionary representing the loopback interface to be created, with keys 'ospfArea'.\n
+
+    Returns:
+        OspfInterface object: An object representing the created loopback interface.
+    """
+     
     interfaceLoopback = models.Interface()
     interfaceLoopback.id = 0
     interfaceLoopback.name = "Loopback"+str(interfaceLoopback.id)
@@ -97,6 +161,17 @@ def handle_loopback(as_object, router_object, loopback):
 
 
 def handle_interface(connection, as_object, router_object):
+    """
+    This function creates objects representing loopback interfaces based on a provided loopback list.
+
+    Parameters:
+        as_object (AS object): The AS object to which the loopback interface belongs.\n
+        router_object (Router object): The router object to which the loopback interface belongs.\n
+        loopback (dict): A dictionary representing the loopback interface to be created, with keys 'ospfArea'.
+
+    Returns:
+        OspfInterface object: An object representing the created loopback interface.
+    """
     interface = models.Interface()
     interface.id = connection["interface"]
     interface.name = "GigabitEthernet" +connection["interface"]+"/0"
@@ -109,8 +184,6 @@ def handle_interface(connection, as_object, router_object):
     else:
         as_object.connections[router_object.id] = {}
         attributeIP(as_object, connection, interface, router_object)
-
-    #Convert mask of the form ## to a mask in the form ###.###.###.###
     mask = as_object.maskLink
     mask = maskFormat(mask)
     interface.mask = mask
@@ -120,6 +193,18 @@ def handle_interface(connection, as_object, router_object):
 
 
 def maskFormat(maskP):
+    """
+    This function converts a CIDR mask to a dotted decimal subnet mask.
+
+    Parameters:
+        maskP (int): The CIDR mask to be converted.
+
+    Returns:
+        str: The subnet mask in dotted decimal notation.
+
+    Example:
+        mask = maskFormat(24)
+    """
     mask = 2 ** maskP - 1
     mask = mask << (32 - maskP)
     mask = [mask >> 24 & 0xff, mask >> 16 & 0xff, mask >> 8 & 0xff, mask & 0xff]
@@ -128,6 +213,18 @@ def maskFormat(maskP):
 
 
 def attributeIP(as_object, connection, interface, router_object):
+    """
+    This function attributes IP addresses to a given interface.
+
+    Args:
+        as_object (AS object): The AS object to which the interface belongs.\n
+        connection (dict): A dictionary representing the connection to another router, with keys 'router' and 'interface'.\n
+        interface (Interface object): The interface to which the IP addresses should be assigned.\n
+        router_object (Router object): The router object to which the interface belongs.
+
+    Returns:
+        None.
+    """
     subnet_ip = as_object.indexLink
     ip1 = incrementIP(subnet_ip, 1)
     ip2 = incrementIP(subnet_ip, 2)
@@ -140,6 +237,16 @@ def attributeIP(as_object, connection, interface, router_object):
     as_object.connections[int(connection['router'])][router_object.id] = ip2
 
 def handle_igp(as_object, router_object):
+    """
+    This function creates objects representing Interior Gateway Protocols (IGP) based on a provided AS object and router object.
+
+    Args:
+        as_object (AS object): The AS object to which the IGP belongs.\n
+        router_object (Router object): The router object to which the IGP belongs.
+
+    Returns:
+        Igp object: An object representing the created IGP.
+    """
     igp = models.Igp()
     igp.id = router_object.id
     igp.type = as_object.igp
