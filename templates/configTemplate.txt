@@ -13,6 +13,13 @@ no aaa new-model
 no ip icmp rate-limit unreachable
 ip cef
 !
+{%for i,vrf in router.vrfs.items()%}
+ip vrf {{vrf.name}}
+ rd {{vrf.routeDistinguisher}}
+ {%for rt in vrf.routeTargets%}
+ route-target {{rt.type}} {{rt.community}}
+ {%endfor%}
+{%endfor%}
 !
 !
 !
@@ -65,6 +72,9 @@ interface {{interface.name}}
  {% if interface.mpls %}
  mpls ip
  {% endif %}
+ {% for vrf in interface.vrfs %}
+ ip vrf forwarding {{vrf}}
+ {% endfor %}
  negotiation auto
 !
 {% endfor %}

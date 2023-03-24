@@ -348,6 +348,77 @@
 
         },
         "relationship": "vpnclient",
+        "client": "1",
+        "filter1": {
+          "in": {
+            "prefixes": [
+            ]
+          },
+          "out": {
+            "prefixes": [
+            ]
+          }
+        },
+        "filter2": {
+          "in": {
+            "prefixes": [
+            ]
+          },
+          "out": {
+            "prefixes": [
+            ]
+          }
+        }
+      },
+      {
+        "firstAS": "100",
+        "firstRouter": "1",
+        "firstInterface": {
+          "id": "1"
+        },
+        "secondAS": "1",
+        "secondRouter": "1",
+        "secondInterface": {
+          "id": "1"
+
+        },
+        "relationship": "vpnclient",
+        "client": "1",
+        "filter1": {
+          "in": {
+            "prefixes": [
+            ]
+          },
+          "out": {
+            "prefixes": [
+            ]
+          }
+        },
+        "filter2": {
+          "in": {
+            "prefixes": [
+            ]
+          },
+          "out": {
+            "prefixes": [
+            ]
+          }
+        }
+      },
+      {
+        "firstAS": "100",
+        "firstRouter": "1",
+        "firstInterface": {
+          "id": "1"
+        },
+        "secondAS": "2",
+        "secondRouter": "1",
+        "secondInterface": {
+          "id": "1"
+
+        },
+        "relationship": "vpnclient",
+        "client": "1",
         "filter1": {
           "in": {
             "prefixes": [
@@ -382,6 +453,7 @@
 
         },
         "relationship": "vpnclient",
+        "client": "2",
         "filter1": {
           "in": {
             "prefixes": [

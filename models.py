@@ -6,6 +6,7 @@ class Router:
         self.loopback = None
         self.igp = None
         self.bgp = None
+        self.vrfs = {}
 
 
 class Interface:
@@ -16,6 +17,7 @@ class Interface:
         self.mask = ""
         self.ospf = None
         self.mpls = False
+        self.vrfs = []
 
 class OspfInterface:
     def __init__(self, id, area =0 , cost = 0):
@@ -61,4 +63,15 @@ class Neighbor:
     def __init__(self, remote_as, ip):
         self.remote_as = remote_as
         self.ip = ip
+
+class Vrf:
+    def __init__(self, name):
+        self.name = name
+        self.routeDistinguisher = None
+        self.routeTargets = []
+
+class RouteTarget:
+    def __init__(self, community, type):
+        self.community = community
+        self.type = type
 

@@ -58,7 +58,6 @@ def incrementIP(ip, amount):
     Raises:
         Exception: If the calculated IPv4 address overflows the valid address range.
     """
-    ip = i
     ip = ip.copy()
     ip[3] += amount
     if ip[3] > 255:
@@ -256,9 +255,9 @@ def handle_igp(as_object, router_object):
 
 
 def handle_AS_links(ASList, links):
-    ipStart = links['IPRange']['start']
-    ipEnd = links['IPRange']['end']
-    mask = links['IPRange']['mask']
+    ipStart = list(map(int,links["IPRange"]["start"].split(".")))
+    ipEnd = list(map(int,links['IPRange']['end'].split(".")))
+    mask = int(links['IPRange']['mask'])
     linkManager = models.LinksManager(ipStart, ipEnd, mask)
 
     for link in links['links']:
@@ -278,29 +277,44 @@ def handle_link_router(AS1, AS2, router1, router2, link, linkManager):
     bgp2 = models.Bgp(AS2.number, router2.loopback.ip)
     router1.bgp = bgp1
     router2.bgp = bgp2
+    interface1 = models.Interface()
+    interface1.id = int(link['firstInterface']['id'])
+    interface1.name = "GigabitEthernet" + str(interface1.id) + "/0"
+    subnetIP = linkManager.indexLink
+    ip1 = incrementIP(subnetIP, 1)
+    ip2 = incrementIP(subnetIP, 2)
+    interface1.ip = ".".join(map(str, ip1))
+    linkManager.indexLink = incrementSubnetIP(linkManager.indexLink, linkManager.linkMask, linkManager.indexLinkEnd)
+    mask = linkManager.linkMask
+    mask = maskFormat(mask)
+    interface1.mask = mask
     if link['relationship'] == "vpnclient":
         if not router1.id in AS1.provEdgeRouters:
             AS1.provEdgeRouters.append(router1.id)
+        client = link['client']
+        VRFclientName = "v" + str(client)
+        if not VRFclientName in router1.vrfs:
+            router1.vrfs[VRFclientName] = models.Vrf(VRFclientName)
+        vrf = router1.vrfs[VRFclientName]
+        vrf.routeDistinguisher = str(client) +":500"
+        routeTargetImp = models.RouteTarget(str(client) +":" + str(client), "import")
+        routeTargetExp = models.RouteTarget(str(client) +":" + str(client), "export")
+        vrf.routeTargets.append(routeTargetImp)
+        vrf.routeTargets.append(routeTargetExp)
+        interface1.vrfs.append(vrf.name)
 
 
 
-    # interface1 = models.Interface()
-    # interface1.id = int(link['firstInterface'])
-    # interface1.name = "GigabitEthernet" + str(interface1.id) + "/0"
+
+    router1.interfaces.append(interface1)
+
+
+
     # interface2 = models.Interface()
-    # interface2.id = int(link['secondInterface'])
+    # interface2.id = int(link['secondInterface']['id'])
     # interface2.name = "GigabitEthernet" + str(interface2.id) + "/0"
-    # subnetIP = linkManager.indexLink
-    # ip1 = incrementIP(subnetIP, 1)
-    # ip2 = incrementIP(subnetIP, 2)
-    # interface1.ip = ".".join(map(str, ip1))
     # interface2.ip = ".".join(map(str, ip2))
-    # linkManager.indexLink = incrementSubnetIP(linkManager.indexLink, linkManager.maskLink, linkManager.indexLinkEnd)
-    # mask = linkManager.maskLink
-    # mask = maskFormat(mask)
-    # interface1.mask = mask
     # interface2.mask = mask
-    # router1.interfaces.append(interface1)
     # router2.interfaces.append(interface2)
     # if not router1.id in AS1.provEdgeRouters:
     #     AS1.provEdgeRouters.append(router1.id)
