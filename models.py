@@ -18,19 +18,20 @@ class Interface:
         self.mpls = False
 
 class OspfInterface:
-    def __init__(self):
-        self.id = None
-        self.area = None
-        self.cost = None
+    def __init__(self, id, area, cost):
+        self.id = id
+        self.area = area
+        self.cost = cost
 
 class AS:
-    def __init__(self,ipStart,ipEnd,loopbackStart,loopbackEnd,mask):
-        
+    def __init__(self,ipStart,ipEnd,loopbackStart,loopbackEnd,mask, mpls):
+        self.connections = {}
         self.mask=mask
         self.indexLinkEnd = ipEnd
         self.indexLoopbackEnd = loopbackEnd
         self.indexLoopback = loopbackStart
         self.indexLink = ipStart
+        self.mpls = mpls
 
 class Igp:
     def __init__(self):
