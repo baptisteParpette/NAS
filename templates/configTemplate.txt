@@ -76,7 +76,25 @@ router ospf {{router.igp.id}}
  passive-interface {{interface}}
  {% endfor %}
 {% endif %}
+!
+{%if router.bgp %}
+router bgp {{ router.bgp.id }}
+ bgp log-neighbor-changes
+ bgp router-id {{ router.bgp.router_id }}
+ {% for neighbor in router.bgp.neighbors %}
+ neighbor {{ neighbor.ip }} remote-as {{ neighbor.remote_as }}
+ neighbor {{ neighbor.ip }} update-source {{router.loopback.name}}
+ {% endfor %}
+ !
+ address-family vpnv4
+ {% for neighbor in router.bgp.neighbors %}
+  neighbor {{ neighbor.ip }} activate
+  neighbor {{ neighbor.ip }} send-community extended
+  {%endfor%}
+ exit-address-family
+{%endif%}
 
+ip bgp-community new-format
 !
 ip forward-protocol nd
 !

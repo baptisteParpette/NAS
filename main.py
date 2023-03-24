@@ -60,10 +60,12 @@ def handle_network(network):
 
         as_object = models.AS(IPstart,IPend,LoopbackStart,LoopbackEnd,maskLink, maskLoopback, mpls, number, igp)
         for routeur in As["routers"]:
-            as_object.routers.append(handle_router(as_object,routeur))
+            as_object.routers[int(routeur['id'])] = handle_router(as_object,routeur)
 
             
         ASList[number] = as_object
+
+    handle_AS_links(ASList, network['ASLink'])
     return ASList
 
 def handle_router(as_object,routeur):
@@ -144,6 +146,72 @@ def handle_igp(as_object, router_object):
     igp.router_id = router_object.loopback.ip
     return igp
 
+
+
+def handle_AS_links(ASList, links):
+    ipStart = links['IPRange']['start']
+    ipEnd = links['IPRange']['end']
+    mask = links['IPRange']['mask']
+    linkManager = models.LinksManager(ipStart, ipEnd, mask)
+
+    for link in links['links']:
+        AS1 = ASList[link['firstAS']]
+        AS2 = ASList[link['secondAS']]
+        router1 = AS1.routers[int(link['firstRouter'])]
+        router2 = AS2.routers[int(link['secondRouter'])]
+        handle_link_router(AS1, AS2,router1, router2, link, linkManager)
+
+    for AS in ASList.values():
+        handle_neighbors(AS)
+
+
+def handle_link_router(AS1, AS2, router1, router2, link, linkManager):
+
+    bgp1 = models.Bgp(AS1.number, router1.loopback.ip)
+    bgp2 = models.Bgp(AS2.number, router2.loopback.ip)
+    router1.bgp = bgp1
+    router2.bgp = bgp2
+    if link['relationship'] == "vpnclient":
+        if not router1.id in AS1.provEdgeRouters:
+            AS1.provEdgeRouters.append(router1.id)
+
+
+
+    # interface1 = models.Interface()
+    # interface1.id = int(link['firstInterface'])
+    # interface1.name = "GigabitEthernet" + str(interface1.id) + "/0"
+    # interface2 = models.Interface()
+    # interface2.id = int(link['secondInterface'])
+    # interface2.name = "GigabitEthernet" + str(interface2.id) + "/0"
+    # subnetIP = linkManager.indexLink
+    # ip1 = incrementIP(subnetIP, 1)
+    # ip2 = incrementIP(subnetIP, 2)
+    # interface1.ip = ".".join(map(str, ip1))
+    # interface2.ip = ".".join(map(str, ip2))
+    # linkManager.indexLink = incrementSubnetIP(linkManager.indexLink, linkManager.maskLink, linkManager.indexLinkEnd)
+    # mask = linkManager.maskLink
+    # mask = maskFormat(mask)
+    # interface1.mask = mask
+    # interface2.mask = mask
+    # router1.interfaces.append(interface1)
+    # router2.interfaces.append(interface2)
+    # if not router1.id in AS1.provEdgeRouters:
+    #     AS1.provEdgeRouters.append(router1.id)
+
+
+
+
+
+def handle_neighbors(AS):
+    for router in AS.provEdgeRouters:
+        for neighbor in AS.provEdgeRouters:
+            if neighbor != router:
+                neighbor_object = models.Neighbor(AS.number, AS.routers[neighbor].loopback.ip)
+                AS.routers[router].bgp.neighbors.append(neighbor_object)
+
+
+
+
 if __name__ == '__main__':
     environment = Environment(loader=FileSystemLoader('templates/'), trim_blocks=True, lstrip_blocks=True)
     template = environment.get_template('configTemplate.txt')
@@ -152,7 +220,7 @@ if __name__ == '__main__':
     ASList = handle_network(load)
     f.close()
     for AS in ASList.values():
-        for router in AS.routers:
+        for router in AS.routers.values():
             print(router.hostname)
             f = open("configRendered/" + router.hostname + ".cfg", "w")
             f.write(template.render(router=router))
