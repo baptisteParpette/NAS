@@ -3,9 +3,8 @@ from tabulate import tabulate
 import re
 import json
 
-
 class Groupe:
-    def __init__(self,id,x,y,w,h):
+    def __init__(self,id,x,y,w,h,color):
         self.id = id
         self.size=(w,h)
         self.coord=(x,y)
@@ -13,7 +12,14 @@ class Groupe:
         self.pointDownRight=(x+w,y+h)
         self.AS = []
         self.routers = []
+        self.color=color
 
+def findInter(startR, endR):
+    for group in groups:
+        for router in group.routers:
+            for link in router[1]:
+                if link[0]==endR and router[0].name==startR:
+                    return link[1]
 
 if __name__ == '__main__':
     server = Gns3Connector("http://localhost:3080")
@@ -24,8 +30,8 @@ if __name__ == '__main__':
     numberOfAs=0
     mappage={}
     mappage2={}
+    mappage3={}
     id=1
-
 
     for draw in lab.drawings:
         
@@ -37,10 +43,14 @@ if __name__ == '__main__':
             if width_match and height_match:
                 width = int(width_match.group(1))
                 height = int(height_match.group(1))
-            temp=Groupe(numberOfAs,int(draw['x']),int(draw['y']),width,height)
+
+            fill_color_match = re.search(r'fill="#([a-fA-F0-9]{6})"', svg_string)
+
+            if fill_color_match:
+                fill_color = fill_color_match.group(1)
+            temp=Groupe(numberOfAs,int(draw['x']),int(draw['y']),width,height,fill_color)
             groups.append(temp)
             numberOfAs+=1
-
     for node in lab.nodes:
         for group in groups:
             x1,y1=group.pointUpLeft
@@ -63,12 +73,15 @@ if __name__ == '__main__':
                 x1,y1=group.pointUpLeft
                 x2,y2=group.pointDownRight
                 if (x1<=x<=x2) and (y1<=y<=y2):
-                    group.AS=as_number  
+                    group.AS=as_number
+
 
     for group in groups:
         for routeur in group.routers:
             mappage[routeur[0].node_id]=routeur[0].name
             mappage2[routeur[0].name]=id
+            mappage3[routeur[0].name]=group.AS
+
             id+=1
 
 
@@ -133,8 +146,47 @@ if __name__ == '__main__':
         AS_dict["routers"] = routers_list
 
         AS_list.append(AS_dict)
+    
+    ASLinks = {"IPRange": {"start": "192.168.124.0", "end": "192.168.255.255", "mask": "30"}, "links": []}
 
-    data = {"AS": AS_list, "ASLink": {"IpRange": {"start": "192.168.124.0", "end": "192.168.255.255", "mask": "30"}, "links": []}}
 
-    with open("resultats.json", "w") as f:
+    mappage4={}
+    inc=1
+    for group in groups:
+        if group.AS!=100:
+            existing_value = mappage4.get(group.color)
+            if existing_value is None:
+                mappage4[group.color] = inc
+                inc += 1
+
+    for group in groups:
+        if group.AS!=100:
+            for router in group.routers:
+                for link in router[1]:
+                    if "PE" in link[0]:
+
+                        router2=link[0]
+
+                        interface=findInter(str(router2),str(router[0].name))
+                        color=mappage4[group.color]
+
+
+                        link = {
+                        "firstAS": str(group.AS),
+                        "firstRouter": str(mappage2[router[0].name]),
+                        "firstInterface": {"id": str(link[1])},
+                        "secondAS": str(mappage3[router2]),
+                        "secondRouter": str(mappage2[router2]),
+                        "secondInterface": {"id": str(interface)},
+                        "relationship": "vpnclient",
+                        "client": str(color),
+                        "filter1": {"in": {"prefixes": []}, "out": {"prefixes": []}},
+                        "filter2": {"in": {"prefixes": []}, "out": {"prefixes": []}}}
+
+                        ASLinks["links"].append(link)
+
+    # Écriture de la clé "ASLink" dans le fichier JSON
+    data = {"AS": AS_list, "ASLink": ASLinks}
+
+    with open("network.json", "w") as f:
         json.dump(data, f, indent=4)
