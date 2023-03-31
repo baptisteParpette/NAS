@@ -380,10 +380,9 @@
         "secondRouter": "1",
         "secondInterface": {
           "id": "1"
-
         },
         "relationship": "vpnclient",
-        "client": "1",
+        "client": "2",
         "filter1": {
           "in": {
             "prefixes": [
@@ -407,7 +406,7 @@
       },
       {
         "firstAS": "100",
-        "firstRouter": "1",
+        "firstRouter": "4",
         "firstInterface": {
           "id": "1"
         },
@@ -418,7 +417,7 @@
 
         },
         "relationship": "vpnclient",
-        "client": "1",
+        "client": "2",
         "filter1": {
           "in": {
             "prefixes": [
@@ -453,7 +452,7 @@
 
         },
         "relationship": "vpnclient",
-        "client": "2",
+        "client": "1",
         "filter1": {
           "in": {
             "prefixes": [
