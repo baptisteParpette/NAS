@@ -1,0 +1,480 @@
+{
+    "AS": [
+      {
+        "number": "100",
+        "IpRange": {
+          "start": "192.168.64.0",
+          "end": "192.168.223.255",
+          "mask": "30"
+        },
+        "IpLoopbackRange": {
+          "start": "192.168.0.0",
+          "end": "192.168.63.255",
+          "mask": "32"
+        },
+        "igp": {
+          "type": "ospf"
+        },
+        "bgp": {
+          "enabled": true,
+          "routerID": "loopback"
+        },
+        "mpls": {
+          "enabled": true,
+          "type": "ldp"
+        },
+        "baseHostname": "R100",
+        "routers": [
+          {
+            "id": "1",
+            "hostname": "PE1",
+            "loopback": {
+              "ospfArea": "0"
+            },
+            "connections": [
+              {
+                "router": "2",
+                "interface": "2",
+                "ospfArea": "0",
+                "ospfCost": "1"
+              }
+            ],
+            "bgp": {
+              "out": {
+                "networks": "",
+                "filter": {
+                }
+              },
+              "in": {
+                "filter": {
+                }
+              }
+            }
+          },
+          {
+            "id": "2",
+            "hostname": "P1",
+            "loopback": {
+              "ospfArea": "0"
+            },
+            "connections": [
+              {
+                "router": "1",
+                "interface": "2",
+                "ospfArea": "0",
+                "ospfCost": "1"
+              },
+              {
+                "router": "3",
+                "interface": "1",
+                "ospfArea": "0",
+                "ospfCost": "1"
+              }
+            ],
+            "bgp": {
+              "out": {
+                "networks": "",
+                "filter": {
+                }
+              },
+              "in": {
+                "filter": {
+                }
+              }
+            }
+          },
+          {
+            "id": "3",
+            "hostname": "P2",
+            "loopback": {
+              "ospfArea": "0"
+            },
+            "connections": [
+              {
+                "router": "2",
+                "interface": "1",
+                "ospfArea": "0",
+                "ospfCost": "1"
+              },
+              {
+                "router": "4",
+                "interface": "2",
+                "ospfArea": "0",
+                "ospfCost": "1"
+              }
+            ],
+            "bgp": {
+              "out": {
+                "networks": "",
+                "filter": {
+                }
+              },
+              "in": {
+                "filter": {
+                }
+              }
+            }
+          },
+          {
+            "id": "4",
+            "hostname": "PE2",
+            "loopback": {
+              "ospfArea": "0"
+            },
+            "connections": [
+              {
+                "router": "3",
+                "interface": "2",
+                "ospfArea": "0",
+                "ospfCost": "1"
+              }
+            ],
+            "bgp": {
+              "out": {
+                "networks": "",
+                "filter": {
+                }
+              },
+              "in": {
+                "filter": {
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "number": "1",
+        "IpRange": {
+          "start": "192.168.64.0",
+          "end": "192.168.223.255",
+          "mask": "30"
+        },
+        "IpLoopbackRange": {
+          "start": "192.168.0.0",
+          "end": "192.168.63.255",
+          "mask": "32"
+        },
+        "igp": {
+          "type": "ospf"
+        },
+        "bgp": {
+          "enabled": true,
+          "routerID": "loopback"
+        },
+        "mpls": {
+          "enabled": false,
+          "type": "ldp"
+        },
+        "routers": [
+          {
+            "id": "1",
+            "hostname": "CE1",
+            "loopback": {
+              "ospfArea": "0"
+            },
+            "connections": [
+            ],
+            "bgp": {
+              "out": {
+                "networks": "",
+                "filter": {
+                }
+              },
+              "in": {
+                "filter": {
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "number": "2",
+        "IpRange": {
+          "start": "192.168.64.0",
+          "end": "192.168.223.255",
+          "mask": "30"
+        },
+        "IpLoopbackRange": {
+          "start": "192.168.0.0",
+          "end": "192.168.63.255",
+          "mask": "32"
+        },
+        "igp": {
+          "type": "ospf"
+        },
+        "bgp": {
+          "enabled": true,
+          "routerID": "loopback"
+        },
+        "mpls": {
+          "enabled": false,
+          "type": "ldp"
+        },
+        "routers": [
+          {
+            "id": "1",
+            "hostname": "CE2",
+            "loopback": {
+              "ospfArea": "0"
+            },
+            "connections": [
+            ],
+            "bgp": {
+              "out": {
+                "networks": "",
+                "filter": {
+                }
+              },
+              "in": {
+                "filter": {
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "number": "3",
+        "IpRange": {
+          "start": "192.168.64.0",
+          "end": "192.168.223.255",
+          "mask": "30"
+        },
+        "IpLoopbackRange": {
+          "start": "192.168.0.0",
+          "end": "192.168.63.255",
+          "mask": "32"
+        },
+        "igp": {
+          "type": "ospf"
+        },
+        "bgp": {
+          "enabled": true,
+          "routerID": "loopback"
+        },
+        "mpls": {
+          "enabled": false,
+          "type": "ldp"
+        },
+        "routers": [
+          {
+            "id": "1",
+            "hostname": "CE3",
+            "loopback": {
+              "ospfArea": "0"
+            },
+            "connections": [
+            ],
+            "bgp": {
+              "out": {
+                "networks": "",
+                "filter": {
+                }
+              },
+              "in": {
+                "filter": {
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "number": "4",
+        "IpRange": {
+          "start": "192.168.64.0",
+          "end": "192.168.223.255",
+          "mask": "30"
+        },
+        "IpLoopbackRange": {
+          "start": "192.168.0.0",
+          "end": "192.168.63.255",
+          "mask": "32"
+        },
+        "igp": {
+          "type": "ospf"
+        },
+        "bgp": {
+          "enabled": true,
+          "routerID": "loopback"
+        },
+        "mpls": {
+          "enabled": false,
+          "type": "ldp"
+        },
+        "routers": [
+          {
+            "id": "1",
+            "hostname": "CE4",
+            "loopback": {
+              "ospfArea": "0"
+            },
+            "connections": [
+            ],
+            "bgp": {
+              "out": {
+                "networks": "",
+                "filter": {
+                }
+              },
+              "in": {
+                "filter": {
+                }
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "ASLink": {
+      "IPRange": {
+        "start": "192.168.124.0",
+        "end": "192.168.255.255",
+        "mask": "30"
+      },
+      "links": [
+        {
+          "firstAS": "100",
+          "firstRouter": "1",
+          "firstInterface": {
+            "id": "3"
+          },
+          "secondAS": "3",
+          "secondRouter": "1",
+          "secondInterface": {
+            "id": "1"
+  
+          },
+          "relationship": "vpnclient",
+          "client": "1",
+          "filter1": {
+            "in": {
+              "prefixes": [
+              ]
+            },
+            "out": {
+              "prefixes": [
+              ]
+            }
+          },
+          "filter2": {
+            "in": {
+              "prefixes": [
+              ]
+            },
+            "out": {
+              "prefixes": [
+              ]
+            }
+          }
+        },
+        {
+          "firstAS": "100",
+          "firstRouter": "1",
+          "firstInterface": {
+            "id": "1"
+          },
+          "secondAS": "1",
+          "secondRouter": "1",
+          "secondInterface": {
+            "id": "1"
+  
+          },
+          "relationship": "vpnclient",
+          "client": "1",
+          "filter1": {
+            "in": {
+              "prefixes": [
+              ]
+            },
+            "out": {
+              "prefixes": [
+              ]
+            }
+          },
+          "filter2": {
+            "in": {
+              "prefixes": [
+              ]
+            },
+            "out": {
+              "prefixes": [
+              ]
+            }
+          }
+        },
+        {
+          "firstAS": "100",
+          "firstRouter": "1",
+          "firstInterface": {
+            "id": "1"
+          },
+          "secondAS": "2",
+          "secondRouter": "1",
+          "secondInterface": {
+            "id": "1"
+  
+          },
+          "relationship": "vpnclient",
+          "client": "1",
+          "filter1": {
+            "in": {
+              "prefixes": [
+              ]
+            },
+            "out": {
+              "prefixes": [
+              ]
+            }
+          },
+          "filter2": {
+            "in": {
+              "prefixes": [
+              ]
+            },
+            "out": {
+              "prefixes": [
+              ]
+            }
+          }
+        },
+        {
+          "firstAS": "100",
+          "firstRouter": "4",
+          "firstInterface": {
+            "id": "3"
+          },
+          "secondAS": "4",
+          "secondRouter": "1",
+          "secondInterface": {
+            "id": "1"
+  
+          },
+          "relationship": "vpnclient",
+          "client": "2",
+          "filter1": {
+            "in": {
+              "prefixes": [
+              ]
+            },
+            "out": {
+              "prefixes": [
+              ]
+            }
+          },
+          "filter2": {
+            "in": {
+              "prefixes": [
+              ]
+            },
+            "out": {
+              "prefixes": [
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
