@@ -62,7 +62,6 @@ interface {{router.loopback.name}}
 !
 {% for interface in router.interfaces %}
 interface {{interface.name}}
- ip address {{interface.ip}} {{interface.mask}}
  {% if interface.ospf %}
  ip ospf {{interface.ospf.id}} area {{interface.ospf.area}}
  {% if interface.ospf.cost %}
@@ -75,6 +74,7 @@ interface {{interface.name}}
  {% for vrf in interface.vrfs %}
  ip vrf forwarding {{vrf}}
  {% endfor %}
+ ip address {{interface.ip}} {{interface.mask}}
  negotiation auto
 !
 {% endfor %}
@@ -93,15 +93,35 @@ router bgp {{ router.bgp.id }}
  bgp router-id {{ router.bgp.router_id }}
  {% for neighbor in router.bgp.neighbors %}
  neighbor {{ neighbor.ip }} remote-as {{ neighbor.remote_as }}
+ {% if router.isProviderEdge %}
  neighbor {{ neighbor.ip }} update-source {{router.loopback.name}}
+ {% endif %}
  {% endfor %}
  !
+{%if router.bgp.neighbors|length > 0 %}
+{%if router.isProviderEdge %}
  address-family vpnv4
+{%else%}
+ address-family ipv4
+  redistribute connected
+ {%endif%}
  {% for neighbor in router.bgp.neighbors %}
   neighbor {{ neighbor.ip }} activate
   neighbor {{ neighbor.ip }} send-community extended
-  {%endfor%}
+ {%endfor%}
  exit-address-family
+ {%endif%}
+  {%for vrf in router.vrfs.values() %}
+ address-family ipv4 vrf {{vrf.name}}
+  redistribute connected
+  {%for neighbor in vrf.neighbors %}
+  neighbor {{ neighbor.ip }} remote-as {{ neighbor.remote_as }}
+  neighbor {{ neighbor.ip }} activate
+  {%endfor%}
+
+ exit-address-family
+ {%endfor%}
+
 {%endif%}
 
 ip bgp-community new-format
