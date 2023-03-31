@@ -273,24 +273,30 @@ def handle_AS_links(ASList, links):
 
 def handle_link_router(AS1, AS2, router1, router2, link, linkManager):
 
-    bgp1 = models.Bgp(AS1.number, router1.loopback.ip)
-    bgp2 = models.Bgp(AS2.number, router2.loopback.ip)
+    subnetIP = linkManager.indexLink
+    ip1 = incrementIP(subnetIP, 1)
+    ip2 = incrementIP(subnetIP, 2)
+    bgp1 = models.Bgp(AS1.number, ".".join(map(str, ip1)))
+    bgp2 = models.Bgp(AS2.number, ".".join(map(str, ip2)))
     router1.bgp = bgp1
     router2.bgp = bgp2
     interface1 = models.Interface()
     interface1.id = int(link['firstInterface']['id'])
     interface1.name = "GigabitEthernet" + str(interface1.id) + "/0"
-    subnetIP = linkManager.indexLink
-    ip1 = incrementIP(subnetIP, 1)
-    ip2 = incrementIP(subnetIP, 2)
+    interface2 = models.Interface()
+    interface2.id = int(link['secondInterface']['id'])
+    interface2.name = "GigabitEthernet" + str(interface2.id) + "/0"
     interface1.ip = ".".join(map(str, ip1))
     linkManager.indexLink = incrementSubnetIP(linkManager.indexLink, linkManager.linkMask, linkManager.indexLinkEnd)
     mask = linkManager.linkMask
     mask = maskFormat(mask)
     interface1.mask = mask
+    interface2.ip = ".".join(map(str, ip2))
+    interface2.mask = mask
     if link['relationship'] == "vpnclient":
         if not router1.id in AS1.provEdgeRouters:
             AS1.provEdgeRouters.append(router1.id)
+            router1.isProviderEdge = True
         client = link['client']
         VRFclientName = "v" + str(client)
         if not VRFclientName in router1.vrfs:
@@ -301,26 +307,16 @@ def handle_link_router(AS1, AS2, router1, router2, link, linkManager):
         routeTargetExp = models.RouteTarget(str(client) +":" + str(client), "export")
         vrf.routeTargets.append(routeTargetImp)
         vrf.routeTargets.append(routeTargetExp)
+        neighborforR1 = models.Neighbor(AS2.number, interface2.ip)
+        vrf.neighbors.append(neighborforR1)
         interface1.vrfs.append(vrf.name)
-
+        neighborForR2 = models.Neighbor(AS1.number, interface1.ip)
+        router2.bgp.neighbors.append(neighborForR2)
 
 
 
     router1.interfaces.append(interface1)
-
-
-
-    # interface2 = models.Interface()
-    # interface2.id = int(link['secondInterface']['id'])
-    # interface2.name = "GigabitEthernet" + str(interface2.id) + "/0"
-    # interface2.ip = ".".join(map(str, ip2))
-    # interface2.mask = mask
-    # router2.interfaces.append(interface2)
-    # if not router1.id in AS1.provEdgeRouters:
-    #     AS1.provEdgeRouters.append(router1.id)
-
-
-
+    router2.interfaces.append(interface2)
 
 
 def handle_neighbors(AS):

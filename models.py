@@ -7,6 +7,7 @@ class Router:
         self.igp = None
         self.bgp = None
         self.vrfs = {}
+        self.isProviderEdge = False
 
 
 class Interface:
@@ -69,6 +70,10 @@ class Vrf:
         self.name = name
         self.routeDistinguisher = None
         self.routeTargets = []
+        self.neighbors = []
+
+    def __str__(self):
+        return self.name + " " + str(self.routeDistinguisher) + " " + str(self.routeTargets) + " " + str(self.neighbors)
 
 class RouteTarget:
     def __init__(self, community, type):

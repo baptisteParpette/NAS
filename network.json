@@ -210,106 +210,56 @@
                 }
             ]
         },
-        {
-            "number": "3",
-            "IpRange": {
-                "start": "192.168.64.0",
-                "end": "192.168.223.255",
-                "mask": "3"
-            },
-            "IpLoopbackRange": {
-                "start": "192.168.64.0",
-                "end": "192.168.64.0",
-                "mask": "4"
-            },
-            "igp": {
-                "type": "ospf"
-            },
-            "bgp": {
-                "enabled": true,
-                "routerID": "loopback"
-            },
-            "mpls": {
-                "enabled": true,
-                "type": "ldp"
-            },
-            "baseHostname": "R3",
-            "routers": [
-                {
-                    "id": "6",
-                    "hostname": "CE3",
-                    "loopback": {
-                        "ospfArea": "0"
-                    },
-                    "connections": [
-                        {
-                            "router": "1",
-                            "interface": "1",
-                            "ospfArea": "0",
-                            "ospfCost": "1"
-                        }
-                    ],
-                    "bgp": {
-                        "out": {
-                            "networks": "",
-                            "filter": {}
-                        },
-                        "in": {
-                            "filter": {}
-                        }
-                    }
-                }
-            ]
+
+        "secondAS": "1",
+        "secondRouter": "1",
+        "secondInterface": {
+          "id": "1"
         },
-        {
-            "number": "2",
-            "IpRange": {
-                "start": "192.168.64.0",
-                "end": "192.168.223.255",
-                "mask": "5"
-            },
-            "IpLoopbackRange": {
-                "start": "192.168.64.0",
-                "end": "192.168.64.0",
-                "mask": "6"
-            },
-            "igp": {
-                "type": "ospf"
-            },
-            "bgp": {
-                "enabled": true,
-                "routerID": "loopback"
-            },
-            "mpls": {
-                "enabled": true,
-                "type": "ldp"
-            },
-            "baseHostname": "R2",
-            "routers": [
-                {
-                    "id": "7",
-                    "hostname": "CE2",
-                    "loopback": {
-                        "ospfArea": "0"
-                    },
-                    "connections": [
-                        {
-                            "router": "4",
-                            "interface": "1",
-                            "ospfArea": "0",
-                            "ospfCost": "1"
-                        }
-                    ],
-                    "bgp": {
-                        "out": {
-                            "networks": "",
-                            "filter": {}
-                        },
-                        "in": {
-                            "filter": {}
-                        }
-                    }
-                }
+        "relationship": "vpnclient",
+        "client": "2",
+        "filter1": {
+          "in": {
+            "prefixes": [
+            ]
+          },
+          "out": {
+            "prefixes": [
+            ]
+          }
+        },
+        "filter2": {
+          "in": {
+            "prefixes": [
+            ]
+          },
+          "out": {
+            "prefixes": [
+            ]
+          }
+        }
+      },
+      {
+        "firstAS": "100",
+        "firstRouter": "4",
+        "firstInterface": {
+          "id": "1"
+        },
+        "secondAS": "2",
+        "secondRouter": "1",
+        "secondInterface": {
+          "id": "1"
+
+        },
+        "relationship": "vpnclient",
+        "client": "2",
+        "filter1": {
+          "in": {
+            "prefixes": [
+            ]
+          },
+          "out": {
+            "prefixes": [
             ]
         },
         {
@@ -370,127 +320,30 @@
             "end": "192.168.255.255",
             "mask": "30"
         },
-        "links": [
-            {
-                "firstAS": "100",
-                "firstRouter": "1",
-                "firstInterface": {
-                    "id": "1"
-                },
-                "secondAS": "1",
-                "secondRouter": "5",
-                "secondInterface": {
-                    "id": "1"
-                },
-                "relationship": "vpnclient",
-                "client": "1",
-                "filter1": {
-                    "in": {
-                        "prefixes": []
-                    },
-                    "out": {
-                        "prefixes": []
-                    }
-                },
-                "filter2": {
-                    "in": {
-                        "prefixes": []
-                    },
-                    "out": {
-                        "prefixes": []
-                    }
-                }
-            },
-            {
-                "firstAS": "100",
-                "firstRouter": "1",
-                "firstInterface": {
-                    "id": "3"
-                },
-                "secondAS": "3",
-                "secondRouter": "6",
-                "secondInterface": {
-                    "id": "1"
-                },
-                "relationship": "vpnclient",
-                "client": "2",
-                "filter1": {
-                    "in": {
-                        "prefixes": []
-                    },
-                    "out": {
-                        "prefixes": []
-                    }
-                },
-                "filter2": {
-                    "in": {
-                        "prefixes": []
-                    },
-                    "out": {
-                        "prefixes": []
-                    }
-                }
-            },
-            {
-                "firstAS": "100",
-                "firstRouter": "4",
-                "firstInterface": {
-                    "id": "1"
-                },
-                "secondAS": "2",
-                "secondRouter": "7",
-                "secondInterface": {
-                    "id": "1"
-                },
-                "relationship": "vpnclient",
-                "client": "2",
-                "filter1": {
-                    "in": {
-                        "prefixes": []
-                    },
-                    "out": {
-                        "prefixes": []
-                    }
-                },
-                "filter2": {
-                    "in": {
-                        "prefixes": []
-                    },
-                    "out": {
-                        "prefixes": []
-                    }
-                }
-            },
-            {
-                "firstAS": "100",
-                "firstRouter": "4",
-                "firstInterface": {
-                    "id": "3"
-                },
-                "secondAS": "4",
-                "secondRouter": "8",
-                "secondInterface": {
-                    "id": "1"
-                },
-                "relationship": "vpnclient",
-                "client": "1",
-                "filter1": {
-                    "in": {
-                        "prefixes": []
-                    },
-                    "out": {
-                        "prefixes": []
-                    }
-                },
-                "filter2": {
-                    "in": {
-                        "prefixes": []
-                    },
-                    "out": {
-                        "prefixes": []
-                    }
-                }
-            }
-        ]
-    }
+
+        "relationship": "vpnclient",
+        "client": "1",
+        "filter1": {
+          "in": {
+            "prefixes": [
+            ]
+          },
+          "out": {
+            "prefixes": [
+            ]
+          }
+        },
+        "filter2": {
+          "in": {
+            "prefixes": [
+            ]
+          },
+          "out": {
+            "prefixes": [
+            ]
+          }
+        }
+      }
+    ]
+  }
 }
