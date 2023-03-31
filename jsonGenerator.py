@@ -163,6 +163,7 @@ if __name__ == '__main__':
             "end": group.ipLoopbackEnd,
             "mask": group.ipLoopbackMask
         }
+        print(group.AS, group.ipRangeMask,group.ipLoopbackMask)
         AS_dict["igp"] = {"type": group.igp}
         AS_dict["bgp"] = {"enabled": True, "routerID": "loopback"}
         AS_dict["mpls"] = {"enabled": True, "type": "ldp"}
