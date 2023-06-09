@@ -33,7 +33,7 @@ Le programme main.py, quant à lui, utilise le fichier JSON généré précédem
 * **Baptiste Parpette** - *Initial work* - [Baptiste Parpette](https://github.com/baptisteparpette)
 * **Valentin RENAUD** - *Initial work* - [Valentin Renaud](https://github.com/Valdyzer)
 * **Samar CHAMKI** - *Initial work* - [Samar CHAMKI](https://github.com/)
-* **Noa TEDGHI** - *Initial work* - [Noa TEDGHI](https://github.com/)
+* **Noa TEDGHI** - *Initial work* - [Noa TEDGHI](https://github.com/ntedghi)
 
 ---
 
